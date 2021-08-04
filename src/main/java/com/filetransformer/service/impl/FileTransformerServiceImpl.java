@@ -41,6 +41,7 @@ public class FileTransformerServiceImpl implements FileTransformerService {
      * transform file from csv to json and push json file to s3
      * @param bucketName
      * @param fileName
+     * Using stripMultipleNewlines method in CSV-Utility to transform the CSV file
      */
     @Override
     public void transformFile(String bucketName, String fileName) {
