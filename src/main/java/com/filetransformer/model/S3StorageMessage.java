@@ -1,5 +1,7 @@
 package com.filetransformer.model;
-
+/**
+ * S3 Storage message will be transferred message between services
+ */
 public class S3StorageMessage {
 
     private String id;

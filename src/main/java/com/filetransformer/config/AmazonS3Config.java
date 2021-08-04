@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 
 /**
- * configuaryion to setup com.uploader.csvuploaded.config values
+ * configuration to setup com.uploader.csvuploaded.config values
  *
  */
 @Configuration

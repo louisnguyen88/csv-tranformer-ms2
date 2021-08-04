@@ -20,7 +20,6 @@ import java.io.File;
 /**
  * service layer to make s3 and sqs calls, validation
  *
- * @author Tu Nguyen
  */
 @Component
 public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
@@ -49,6 +48,12 @@ public class AmazonS3ClientServiceImpl implements AmazonS3ClientService {
         }
     }
 
+    /**
+     * Get Data from S3 Bucket
+     * @param bucketName
+     * @param fileName
+     * @return
+     */
     @Override
     public S3Object getData(String bucketName, String fileName) {
         return  amazonS3.getObject(bucketName, fileName);

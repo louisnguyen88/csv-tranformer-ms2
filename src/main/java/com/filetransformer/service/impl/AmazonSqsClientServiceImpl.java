@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+/**
+ * This class will be send message to SQS by QueueMessagingTemplate
+ */
 @Service
 public class AmazonSqsClientServiceImpl implements AmazonSqsClientService {
 
@@ -22,7 +25,7 @@ public class AmazonSqsClientServiceImpl implements AmazonSqsClientService {
     public AmazonSqsClientServiceImpl(QueueMessagingTemplate queueMessagingTemplate) {
         this.queueMessagingTemplate = queueMessagingTemplate;
     }
-
+    // send message to ms-file-transformer sqs queue
     @Override
     public void sendMessageToFileTransformerSqs(String bucketName, String jsonFileName) {
         S3StorageMessage s3StorageMessage = new S3StorageMessage(UUID.randomUUID().toString(),bucketName, jsonFileName);

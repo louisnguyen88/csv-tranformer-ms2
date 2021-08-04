@@ -20,6 +20,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This service will be transformed data from csv to json, push json file to S3 and push message to SQS queue
+ */
 @Service
 public class FileTransformerServiceImpl implements FileTransformerService {
     private static final Logger log = LoggerFactory.getLogger(FileTransformerServiceImpl.class);
@@ -34,6 +37,11 @@ public class FileTransformerServiceImpl implements FileTransformerService {
         this.awsS3Bucket = awsS3Bucket;
     }
 
+    /**
+     * transform file from csv to json and push json file to s3
+     * @param bucketName
+     * @param fileName
+     */
     @Override
     public void transformFile(String bucketName, String fileName) {
         try (S3Object s3Object = amazonS3ClientService.getData(bucketName, fileName); InputStream fis = s3Object.getObjectContent()) {
