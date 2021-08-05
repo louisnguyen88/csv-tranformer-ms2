@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -44,6 +45,7 @@ public class FileTransformerServiceImpl implements FileTransformerService {
      * Using stripMultipleNewlines method in CSV-Utility to transform the CSV file
      */
     @Override
+    @Async
     public void transformFile(String bucketName, String fileName) {
         try (S3Object s3Object = amazonS3ClientService.getData(bucketName, fileName); InputStream fis = s3Object.getObjectContent()) {
             String jsonFileName = fileName.replace(".csv", ".json");
