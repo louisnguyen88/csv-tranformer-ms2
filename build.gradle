@@ -16,12 +16,12 @@ plugins {
     id 'org.springframework.boot' version '2.5.0'
     id 'java'
 }
-group = 'com.uploader'
+group = 'com.gradteam'
 version = '1.0'
 sourceCompatibility = '1.8'
 
-def appName = "SpringBootTemplate Sample Web Service"
-def appVendor = "Sample RCT, INC."
+def appName = "ms2-transformer"
+def appVendor = "Seisma Grad Team"
 def builtBy = "louisnguyen"
 def now = new Date().format("dd/MM/yyyy HH:mm:ss")
 def commitHashFull = UUID.randomUUID().toString()
