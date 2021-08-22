@@ -1,0 +1,115 @@
+buildscript {
+    ext {
+        springBootVersion = '2.5.0'
+        springCloudVersion = 'Finchley.SR1'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+plugins {
+    id 'com.google.cloud.tools.jib' version '3.1.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.springframework.boot' version '2.5.0'
+    id 'java'
+}
+group = 'com.uploader'
+version = '1.0'
+sourceCompatibility = '1.8'
+
+def appName = "SpringBootTemplate Sample Web Service"
+def appVendor = "Sample RCT, INC."
+def builtBy = "louisnguyen"
+def now = new Date().format("dd/MM/yyyy HH:mm:ss")
+def commitHashFull = UUID.randomUUID().toString()
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.amazonaws:aws-java-sdk:1.12.37'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws-messaging'
+    //swagger
+    implementation 'io.springfox:springfox-swagger2:2.9.2'
+    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'junit:junit'
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+sourceSets {
+    main {
+        resources.excludes = ["*.jar"]
+    }
+    integrationTest {
+        java.srcDir file("src/integrationTest/java")
+        resources.srcDir file("src/integrationTest/resources")
+    }
+}
+
+task integrationTest(type: Test) {
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+// This is required for Jenkins to run the unit tests
+test.dependsOn integrationTest
+
+jib {
+    from {
+        image = "adoptopenjdk/openjdk8"
+        auth {
+            username = 'louisdock88'
+            password = 'GetPr@2022'
+        }
+    }
+    to {
+        image = "289193905928.dkr.ecr.ap-southeast-2.amazonaws.com/file-transformer:$commitHashFull"
+        //credHelper = 'ecr-login'
+        //auth {
+        //    username = 'AWS'
+        //    password = 'eyJwYXlsb2FkIjoiTHdGNWQ2NGpMNVhrbXRoYjZQVHlPMTd3Z2wwalZKNnVzWkREUHJ3Umxvd3JNL3lVcXE3Wk5id1RXTW1ZQzJkejVuZDJEbjZCRmJnMko0NVQvdGlGMFdJUjlPQkZpSUNoNjlKbVRKMnd0dlhraGJ3T2pFZWMyV0kzUU05UnFnK3hCUUhBNklsTWFzbUxUR0k2Vm4vSjRCTXgxL2hROTQ2aGJ3YnRKNGtkakhORXBGZ3Y1dk5TVHNkamNRY1ozeDR1bmtmTG05U0RURWVSOXgvZlVRdm5FM1h3dStQeHhYOFlPdEZwTkF1VVE1L0gvaHppak9iM0RtT0U5QVVYckp0bkFpYjFwaW5ZMHd4Vmx2QXlaL290UVY2aXFXNDNKYXArNU1kWWg2KzB6WlRkL05TeU12WlNEb1V4QitUQlpoTmdIYkx5SzRhT3VITVJKUFMycWo2WEdBckJ6RkhQYnB2TkVGa1FGWmJyQ2VRMmZIQ28wRHJRdENuY0ZWcEJiVXNsQTdYVkRvbUw4TlhPTHI2bFZpWnpQSk1tb1hkRFFXUTdxRVR0U29qa1VRSjlXVmtoSG5WK21JTFh6WlRPWno5M0tLSVY4VUZZMC9iWjBGYytqS2ZLdGN6NGFCSjA4amY2M0U4NFpHU0J4ZDdiTk5ZQWZUeGIvZ3dDOTNybEdYVkxxSXRyeXdoMzgwS3lJeFFxK0VVNFhFRzEzQjRUY3F5eVNFK1ZRWllMLzBHb0Rkc2NHd1RLY2Z5aDFKNHFHUUYzSnZ2TEdiZ3ZSd0h2UkJJeEthWlBTK0lDaE9EN25VM0w4QURsK3RFdkRZRDdwSDlndGJmRWRtVmpUQ0ZDYmFEWTRaWTV1SUM2RmdpcDQzazFPSXVYN002d0VPb09xNDBFTmpGd2F4UDN6UnpLbmZhZm9HQklZRFJ1M3NHN1hrVEJ2a2Y2Q2lkaDBNTWVScmkyRmNiVUdCL0JrYkl4QitkbldwcVJwbGdOaUw2WVBheU0ybFdPeE1BcDNIdWdmL0JXTmR3N2Z3WUZwTGdVMERxV2lTeW9NTXB6VzR2elVMbzNFVFBBMFVWMm5icVFTWmN0UW1EU1dZcGozNnhrbnB5NlRXWVY2U09wcGkxY2pYMHFKMVIvRzNiMGFKMnByYTNDdVBWSHNHYktZb0h6RW9aVUlHL0dnOE5nZnlvUXg4Y1JqUFVnT05xc1RSZld4NGVWV3NKUnpQTDVCT0MvQUxtUnhTOXd0dGo0Ny82ME1qekdPOFZTM3VlN2IzeEFqVk8vci9GS0tQSERXdWc0ZytJL0NNdlNWalo1VCtzcEQ2OXIxV2g5T2xqTUVQdUc0dVpuS1NLb0t0NVM1Y3dEK0JuNzA2N3ZiOXVlOGJZby9LeWFtNmhMVmpDQUxWdHNXdzNEZFZ5RHpqcDFFbnJ2Zzcwa3ZKRHhlMGQ4akN2R2N5OExJa1VjSEh0RzZLMU1hY0lqZkJrSG5aRHdjOTh1dWpDaVlmL0NGRDdsVlBpZiIsImRhdGFrZXkiOiJBUUVCQUhoTHlqejdQSkVQbVlicUg2QTZmL3dXTnp5ejVCS2EzN0JuQlBzQXl1RjFLUUFBQUg0d2ZBWUpLb1pJaHZjTkFRY0dvRzh3YlFJQkFEQm9CZ2txaGtpRzl3MEJCd0V3SGdZSllJWklBV1VEQkFFdU1CRUVEQUJaRG9yUkpNaVZHOXBrcWdJQkVJQTdWU0xYUHFRR1BBeUVnUFlYZXVEdU9xSHJUMFR1R21sVW1sdmRTcWlPdTR1NnRoZHV5ZExoYyttb1dmZ2tvdXFwTU1KRWp4U3lUZVJRU3ZjPSIsInZlcnNpb24iOiIyIiwidHlwZSI6IkRBVEFfS0VZIiwiZXhwaXJhdGlvbiI6MTYyOTUyMTY3NH0='
+        //}
+        //image = "louisdock88/file-transformer:$imageType-$buildNumber-$commitHashFull"
+        //auth {
+        //    username = 'louisdock88'
+        //    password = 'GetPr@2022'
+       // }
+        tags = ['latest']
+    }
+    container {
+        ports = ['8081', '9001']
+        labels = [
+                maintainer: "aws-solution",
+                fullCommitHash: commitHashFull,
+                buildBy: builtBy,
+                appName: appName,
+                "org.label-schema.build-date": "${now.toString()}" as String,
+                "org.label-schema.image-version": "$commitHashFull" as String
+        ]
+        environment = [
+                appName: appName,
+                appVendor: appVendor,
+                builtBy: builtBy,
+                buildDate: "${now.toString()}" as String,
+                implementationDate: "${now.toString()}" as String,
+                versionString: version,
+                imageName: "$commitHashFull" as String
+        ]
+    }
+}

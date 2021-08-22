@@ -27,7 +27,7 @@ public class AmazonSqsConsumerService {
 
     // @SqsListener listens the message from the specified queue.
     // Here in this example we are printing the message on the console and message will be deleted from the queue once it is sucessfully delivered.
-    @SqsListener(value = QUEUE, deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
+    @SqsListener(value = QUEUE, deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
     public void getMessageFromSqs(S3StorageMessage message, @Header("MessageId") String messageId) {
         log.info("Received message= {} with messageId= {}", message, messageId);
         fileTransformerService.transformFile(message.getBucketName(), message.getFileName());
