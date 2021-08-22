@@ -73,10 +73,10 @@ test.dependsOn integrationTest
 jib {
     from {
         image = "adoptopenjdk/openjdk8"
-        auth {
-            username = 'louisdock88'
-            password = 'GetPr@2022'
-        }
+        //auth {
+        //    username = 'louisdock88'
+        //    password = 'GetPr@2022'
+        //}
     }
     to {
         image = "289193905928.dkr.ecr.ap-southeast-2.amazonaws.com/file-transformer:$commitHashFull"
