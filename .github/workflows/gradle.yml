@@ -11,9 +11,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 8
@@ -34,8 +32,8 @@ jobs:
         aws-secret-access-key: ${{secrets.AWS_KEY}}
         aws-region: ${{secrets.AWS_REGION}}
 
-    - name: Login to Amazon ECR
-      id: login-ecr
+    - name: Login to AWS ECR
+        id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
     - name: Push To ECR
        run: ./gradlew jib
